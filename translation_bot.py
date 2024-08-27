@@ -1,8 +1,9 @@
 import streamlit as st
-import openai
+# import openai  # Commented out as it's causing an error
 import docx
 import PyPDF2
 import io
+from openai import OpenAI  # Import OpenAI class directly
 
 # Set page config
 st.set_page_config(page_title="Translation Bot", layout="wide")
@@ -53,7 +54,7 @@ if prompt := st.chat_input("Enter text to translate"):
     if not api_key:
         st.error("Please enter your OpenAI API key in the sidebar.")
     else:
-        client = openai.OpenAI(api_key=api_key)
+        client = OpenAI(api_key=api_key)  # Use the OpenAI class directly
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -73,7 +74,7 @@ if prompt := st.chat_input("Enter text to translate"):
             st.session_state.messages.append({"role": "assistant", "content": translation})
             with st.chat_message("assistant"):
                 st.markdown(translation)
-        except openai.OpenAIError as e:
+        except Exception as e:  # Changed from openai.OpenAIError to catch all exceptions
             st.error(f"An error occurred: {str(e)}")
 
 # Note: The document translation feature has been removed as it's no longer needed.
